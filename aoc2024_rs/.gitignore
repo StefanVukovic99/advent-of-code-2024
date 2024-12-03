@@ -1,0 +1,16 @@
+# Rust build files
+/target/
+
+# Cargo lock file (optional, if you don't want to track it)
+#Cargo.lock
+
+# IDE/Editor files
+/.idea/
+/.vscode/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
