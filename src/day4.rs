@@ -25,7 +25,9 @@ pub fn part1(input: &str) -> usize {
 
     fn search_vicinity(matrix: &Vec<Vec<char>>, x: usize, y: usize) -> usize {
         let mut hits = 0;
-        for (dx, dy) in DIRECTIONS_ITER {
+        for i in 0..9 {
+            let dx = (i / 3) as isize - 1;
+            let dy = (i % 3) as isize - 1;
             hits += search_direction(matrix, x, dx, y, dy);
         }
         hits
