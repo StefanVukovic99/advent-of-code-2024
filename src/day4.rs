@@ -47,6 +47,55 @@ pub fn part1(input: &str) -> usize {
 }
 
 #[aoc(day4, part2)]
-pub fn part2(_input: &str) -> u32 {
-    2
+pub fn part2(input: &str) -> usize {
+    let matrix: Vec<Vec<char>> = input.lines().map(|line| line.chars().collect()).collect();
+    let len_x = matrix.len();
+    let len_y = matrix[0].len();
+
+    fn search_diagonal(matrix: &Vec<Vec<char>>, x: usize, dx: isize, y: usize, dy: isize, len_x: usize, len_y: usize) -> bool {
+        let x_pos = (x as isize + dx) as usize;
+        let y_pos = (y as isize + dy) as usize;
+
+        let x_neg = (x as isize - dx) as usize;
+        let y_neg = (y as isize - dy) as usize;
+
+        if x == 0 || x == len_x - 1 || y == 0 || y == len_y - 1 {
+            return false;
+        }
+        if matrix[x_pos][y_pos] != 'M' || matrix[x_neg][y_neg] != 'S' {
+            return false;
+        }
+
+        true
+    }
+
+    fn search_diagonals(matrix: &Vec<Vec<char>>, x: usize, y: usize, len_x: usize, len_y: usize) -> usize {
+        let diagonals = [
+            (1, 1),
+            (1, -1),
+            (-1, -1),
+            (-1, 1),
+        ];
+        for i in 0..4 {
+            let (dx1, dy1) = diagonals[i];
+            let (dx2, dy2) = diagonals[(i + 1) % 4];
+            if search_diagonal(matrix, x, dx1, y, dy1, len_x, len_y) 
+                && search_diagonal(matrix, x, dx2, y, dy2, len_x, len_y) {
+                return 1;
+            }
+        }
+
+        0
+    }
+
+    let mut hits = 0;
+    for i in 0..len_x {
+        for j in 0..len_y {
+            if matrix[i][j] == 'A' {
+                hits += search_diagonals(&matrix, i, j, len_x, len_y);
+            }
+        }
+    }
+
+    hits
 }
