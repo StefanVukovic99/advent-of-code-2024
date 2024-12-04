@@ -1,3 +1,3 @@
-use aoc_runner_derive::aoc_lib;
+pub mod day4;
 
-aoc_lib!{ year = 2024 }
+aoc_runner_derive::aoc_lib! { year = 2024 }
