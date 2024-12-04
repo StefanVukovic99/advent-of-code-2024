@@ -3,22 +3,18 @@ use aoc_runner_derive::{aoc};
 const MATRIX_SIZE: usize = 140;
 const MATRIX_MAX: usize = MATRIX_SIZE - 1;
 
-#[inline(always)]
-fn search_vicinity(matrix: &[[char; 140]; 140], x: usize, y: usize) -> usize {
-    let mut hits = 0;
-    hits += search_direction(matrix, x, -1, y, -1); // up-left
-    hits += search_direction(matrix, x, -1, y, 0); // up
-    hits += search_direction(matrix, x, -1, y, 1); // up-right
-    hits += search_direction(matrix, x, 0, y, -1); // left
-    hits += search_direction(matrix, x, 0, y, 1); // right
-    hits += search_direction(matrix, x, 1, y, -1); // down-left
-    hits += search_direction(matrix, x, 1, y, 0); // down
-    hits += search_direction(matrix, x, 1, y, 1); // down-right
-
-    hits
+fn search_vicinity(matrix: &[[char; MATRIX_SIZE]; MATRIX_SIZE], x: usize, y: usize) -> usize {
+    // Unrolled direction searching with compile-time optimizations
+    search_direction(matrix, x, -1, y, -1) + // up-left
+    search_direction(matrix, x, -1, y, 0)  + // up
+    search_direction(matrix, x, -1, y, 1)  + // up-right
+    search_direction(matrix, x, 0, y, -1)  + // left
+    search_direction(matrix, x, 0, y, 1)   + // right
+    search_direction(matrix, x, 1, y, -1)  + // down-left
+    search_direction(matrix, x, 1, y, 0)   + // down
+    search_direction(matrix, x, 1, y, 1)     // down-right
 }
 
-#[inline(always)]
 fn search_direction(matrix: &[[char; 140]; 140], x: usize, dx: isize, y: usize, dy: isize) -> usize {
     let x_end = x as isize + 3 * dx;
     let y_end = y as isize + 3 * dy;
@@ -59,7 +55,6 @@ pub fn part1(input: &str) -> usize {
     hits
 }
 
-#[inline(always)]
 fn search_diagonal(matrix: &[[char; 140]; 140], x: usize, dx: isize, y: usize, dy: isize) -> bool {
     let x_pos = (x as isize + dx) as usize;
     let y_pos = (y as isize + dy) as usize;
@@ -77,7 +72,6 @@ fn search_diagonal(matrix: &[[char; 140]; 140], x: usize, dx: isize, y: usize, d
     true
 }
 
-#[inline(always)]
 fn search_diagonals(matrix: &[[char; 140]; 140], x: usize, y: usize) -> usize {
     match (
         search_diagonal(matrix, x, 1, y, 1),
