@@ -1,5 +1,8 @@
 use aoc_runner_derive::{aoc};
 
+const MATRIX_SIZE: usize = 140;
+const MATRIX_MAX: usize = MATRIX_SIZE - 1;
+
 #[aoc(day4, part1)]
 pub fn part1(input: &str) -> usize {
     let matrix: Vec<Vec<char>> = input.lines().map(|line| line.chars().collect()).collect();
@@ -18,7 +21,7 @@ pub fn part1(input: &str) -> usize {
         let x_end = x as isize + 3 * dx;
         let y_end = y as isize + 3 * dy;
 
-        if x_end < 0 || x_end > 139 as isize || y_end < 0 || y_end > 139 as isize {
+        if x_end < 0 || x_end > MATRIX_MAX as isize || y_end < 0 || y_end > MATRIX_MAX as isize {
             return 0;
         }
 
@@ -33,8 +36,8 @@ pub fn part1(input: &str) -> usize {
     }
 
     let mut hits = 0;
-    for i in 0..140 {
-        for j in 0..140 {
+    for i in 0..MATRIX_SIZE {
+        for j in 0..MATRIX_SIZE {
             if matrix[i][j] == 'X' {
                 hits += search_vicinity(&matrix, i, j);
             }
@@ -55,7 +58,7 @@ pub fn part2(input: &str) -> usize {
         let x_neg = (x as isize - dx) as usize;
         let y_neg = (y as isize - dy) as usize;
 
-        if x == 0 || x == 139 || y == 0 || y == 139 {
+        if x == 0 || x == MATRIX_MAX || y == 0 || y == MATRIX_MAX {
             return false;
         }
         if matrix[x_pos][y_pos] != 'M' || matrix[x_neg][y_neg] != 'S' {
@@ -85,8 +88,8 @@ pub fn part2(input: &str) -> usize {
     }
 
     let mut hits = 0;
-    for i in 0..140 {
-        for j in 0..140{
+    for i in 0..MATRIX_SIZE {
+        for j in 0..MATRIX_SIZE{
             if matrix[i][j] == 'A' {
                 hits += search_diagonals(&matrix, i, j);
             }
