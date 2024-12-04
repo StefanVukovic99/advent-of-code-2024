@@ -2,22 +2,6 @@ use aoc_runner_derive::{aoc};
 
 const MATRIX_SIZE: usize = 140;
 const MATRIX_MAX: usize = MATRIX_SIZE - 1;
-const DIRECTIONS_ITER: [(isize, isize); 8] = [
-    (-1, -1),
-    (-1, 0),
-    (-1, 1),
-    (0, -1),
-    (0, 1),
-    (1, -1),
-    (1, 0),
-    (1, 1),
-];
-const DIAGONALS_ITER: [(isize, isize); 4] = [
-    (1, 1),
-    (1, -1),
-    (-1, -1),
-    (-1, 1),
-];
 
 #[aoc(day4, part1)]
 pub fn part1(input: &str) -> usize {
@@ -89,11 +73,20 @@ pub fn part2(input: &str) -> usize {
     }
 
     fn search_diagonals(matrix: &Vec<Vec<char>>, x: usize, y: usize) -> usize {
-        for i in 0..4 {
-            let (dx1, dy1) = DIAGONALS_ITER[i];
-            let (dx2, dy2) = DIAGONALS_ITER[(i + 3) % 4];
-            if search_diagonal(matrix, x, dx1, y, dy1) 
-                && search_diagonal(matrix, x, dx2, y, dy2) {
+        if search_diagonal(matrix, x, 1, y, 1) {
+            if search_diagonal(matrix, x, -1, y, 1) || search_diagonal(matrix, x, 1, y, -1) {
+                return 1;
+            }
+        } else if search_diagonal(matrix, x, -1, y, 1) {
+            if search_diagonal(matrix, x, 1, y, 1) || search_diagonal(matrix, x, -1, y, -1) {
+                return 1;
+            }
+        } else if search_diagonal(matrix, x, 1, y, -1) {
+            if search_diagonal(matrix, x, -1, y, -1) || search_diagonal(matrix, x, 1, y, 1) {
+                return 1;
+            }
+        } else if search_diagonal(matrix, x, -1, y, -1) {
+            if search_diagonal(matrix, x, 1, y, -1) || search_diagonal(matrix, x, -1, y, 1) {
                 return 1;
             }
         }
