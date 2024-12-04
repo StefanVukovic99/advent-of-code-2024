@@ -25,11 +25,15 @@ pub fn part1(input: &str) -> usize {
 
     fn search_vicinity(matrix: &Vec<Vec<char>>, x: usize, y: usize) -> usize {
         let mut hits = 0;
-        for i in 0..9 {
-            let dx = (i / 3) as isize - 1;
-            let dy = (i % 3) as isize - 1;
-            hits += search_direction(matrix, x, dx, y, dy);
-        }
+        hits += search_direction(matrix, x, -1, y, -1); // up-left
+        hits += search_direction(matrix, x, -1, y, 0); // up
+        hits += search_direction(matrix, x, -1, y, 1); // up-right
+        hits += search_direction(matrix, x, 0, y, -1); // left
+        hits += search_direction(matrix, x, 0, y, 1); // right
+        hits += search_direction(matrix, x, 1, y, -1); // down-left
+        hits += search_direction(matrix, x, 1, y, 0); // down
+        hits += search_direction(matrix, x, 1, y, 1); // down-right
+
         hits
     }
 
