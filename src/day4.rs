@@ -5,9 +5,15 @@ const MATRIX_MAX: usize = MATRIX_SIZE - 1;
 
 #[aoc(day4, part1)]
 pub fn part1(input: &str) -> usize {
-    let matrix: Vec<Vec<char>> = input.lines().map(|line| line.chars().collect()).collect();
+    let mut matrix = [[' '; MATRIX_SIZE]; MATRIX_SIZE];
+        
+    input.lines().enumerate().for_each(|(i, line)| {
+        line.chars().enumerate().for_each(|(j, c)| {
+            matrix[i][j] = c;
+        });
+    });
 
-    fn search_vicinity(matrix: &Vec<Vec<char>>, x: usize, y: usize) -> usize {
+    fn search_vicinity(matrix: &[[char; 140]; 140], x: usize, y: usize) -> usize {
         let mut hits = 0;
         hits += search_direction(matrix, x, -1, y, -1); // up-left
         hits += search_direction(matrix, x, -1, y, 0); // up
@@ -21,7 +27,7 @@ pub fn part1(input: &str) -> usize {
         hits
     }
 
-    fn search_direction(matrix: &Vec<Vec<char>>, x: usize, dx: isize, y: usize, dy: isize) -> usize {
+    fn search_direction(matrix: &[[char; 140]; 140], x: usize, dx: isize, y: usize, dy: isize) -> usize {
         let x_end = x as isize + 3 * dx;
         let y_end = y as isize + 3 * dy;
 
@@ -53,9 +59,15 @@ pub fn part1(input: &str) -> usize {
 
 #[aoc(day4, part2)]
 pub fn part2(input: &str) -> usize {
-    let matrix: Vec<Vec<char>> = input.lines().map(|line| line.chars().collect()).collect();
+    let mut matrix = [[' '; MATRIX_SIZE]; MATRIX_SIZE];
+        
+    input.lines().enumerate().for_each(|(i, line)| {
+        line.chars().enumerate().for_each(|(j, c)| {
+            matrix[i][j] = c;
+        });
+    });
 
-    fn search_diagonal(matrix: &Vec<Vec<char>>, x: usize, dx: isize, y: usize, dy: isize) -> bool {
+    fn search_diagonal(matrix: &[[char; 140]; 140], x: usize, dx: isize, y: usize, dy: isize) -> bool {
         let x_pos = (x as isize + dx) as usize;
         let y_pos = (y as isize + dy) as usize;
 
@@ -72,7 +84,7 @@ pub fn part2(input: &str) -> usize {
         true
     }
 
-    fn search_diagonals(matrix: &Vec<Vec<char>>, x: usize, y: usize) -> usize {
+    fn search_diagonals(matrix: &[[char; 140]; 140], x: usize, y: usize) -> usize {
         match (
             search_diagonal(matrix, x, 1, y, 1),
             search_diagonal(matrix, x, -1, y, 1),
