@@ -73,25 +73,19 @@ pub fn part2(input: &str) -> usize {
     }
 
     fn search_diagonals(matrix: &Vec<Vec<char>>, x: usize, y: usize) -> usize {
-        if search_diagonal(matrix, x, 1, y, 1) {
-            if search_diagonal(matrix, x, -1, y, 1) || search_diagonal(matrix, x, 1, y, -1) {
-                return 1;
-            }
-        } else if search_diagonal(matrix, x, -1, y, 1) {
-            if search_diagonal(matrix, x, 1, y, 1) || search_diagonal(matrix, x, -1, y, -1) {
-                return 1;
-            }
-        } else if search_diagonal(matrix, x, 1, y, -1) {
-            if search_diagonal(matrix, x, -1, y, -1) || search_diagonal(matrix, x, 1, y, 1) {
-                return 1;
-            }
-        } else if search_diagonal(matrix, x, -1, y, -1) {
-            if search_diagonal(matrix, x, 1, y, -1) || search_diagonal(matrix, x, -1, y, 1) {
-                return 1;
-            }
+        match (
+            search_diagonal(matrix, x, 1, y, 1),
+            search_diagonal(matrix, x, -1, y, 1),
+            search_diagonal(matrix, x, 1, y, -1),
+            search_diagonal(matrix, x, -1, y, -1),
+        ) {
+            (true, true, _, _) | 
+            (true, _, true, _) |
+            (_, true, _, true) |
+            (_, _, true, true)
+            => return 1,
+            (_, _, _, _) => return 0,
         }
-
-        0
     }
 
     let mut hits = 0;
