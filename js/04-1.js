@@ -19,7 +19,6 @@ function searchVicinity(x, y) {
 function searchDirection(x, dx, y, dy) {
     const x_end = x + 3*dx;
     const y_end = y + 3*dy;
-    console.log('Searching direction', x, y, dx, dy, x_end, y_end);
 
     if(x_end < 0 || x_end > LEN_X - 1) return 0;
     if(y_end < 0 || y_end > LEN_Y - 1) return 0;
