@@ -72,20 +72,18 @@ fn search_diagonal(matrix: &[[char; 140]; 140], x: usize, dx: isize, y: usize, d
     true
 }
 
-fn search_diagonals(matrix: &[[char; 140]; 140], x: usize, y: usize) -> usize {
-    match (
+fn search_diagonals(matrix: &[[char; MATRIX_SIZE]; MATRIX_SIZE], x: usize, y: usize) -> usize {
+    let diag_checks = [
         search_diagonal(matrix, x, 1, y, 1),
         search_diagonal(matrix, x, -1, y, 1),
         search_diagonal(matrix, x, 1, y, -1),
-        search_diagonal(matrix, x, -1, y, -1),
-    ) {
-        (true, true, _, _) | 
-        (true, _, true, _) |
-        (_, true, _, true) |
-        (_, _, true, true)
-        => return 1,
-        (_, _, _, _) => return 0,
-    }
+        search_diagonal(matrix, x, -1, y, -1)
+    ];
+
+    (diag_checks[0] && diag_checks[1] ||
+     diag_checks[0] && diag_checks[2] ||
+     diag_checks[1] && diag_checks[3] ||
+     diag_checks[2] && diag_checks[3]) as usize
 }
 
 #[aoc(day4, part2)]
