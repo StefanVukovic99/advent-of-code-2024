@@ -2,6 +2,22 @@ use aoc_runner_derive::{aoc};
 
 const MATRIX_SIZE: usize = 140;
 const MATRIX_MAX: usize = MATRIX_SIZE - 1;
+const DIRECTIONS_ITER: [(isize, isize); 8] = [
+    (-1, -1),
+    (-1, 0),
+    (-1, 1),
+    (0, -1),
+    (0, 1),
+    (1, -1),
+    (1, 0),
+    (1, 1),
+];
+const DIAGONALS_ITER: [(isize, isize); 4] = [
+    (1, 1),
+    (1, -1),
+    (-1, -1),
+    (-1, 1),
+];
 
 #[aoc(day4, part1)]
 pub fn part1(input: &str) -> usize {
@@ -9,9 +25,7 @@ pub fn part1(input: &str) -> usize {
 
     fn search_vicinity(matrix: &Vec<Vec<char>>, x: usize, y: usize) -> usize {
         let mut hits = 0;
-        for i in [0, 1, 2, 3, 5, 6, 7, 8].iter() {
-            let dx = (i / 3) as isize - 1;
-            let dy = (i % 3) as isize - 1;
+        for (dx, dy) in DIRECTIONS_ITER {
             hits += search_direction(matrix, x, dx, y, dy);
         }
         hits
@@ -69,15 +83,9 @@ pub fn part2(input: &str) -> usize {
     }
 
     fn search_diagonals(matrix: &Vec<Vec<char>>, x: usize, y: usize) -> usize {
-        let diagonals = [
-            (1, 1),
-            (1, -1),
-            (-1, -1),
-            (-1, 1),
-        ];
         for i in 0..4 {
-            let (dx1, dy1) = diagonals[i];
-            let (dx2, dy2) = diagonals[(i + 1) % 4];
+            let (dx1, dy1) = DIAGONALS_ITER[i];
+            let (dx2, dy2) = DIAGONALS_ITER[(i + 3) % 4];
             if search_diagonal(matrix, x, dx1, y, dy1) 
                 && search_diagonal(matrix, x, dx2, y, dy2) {
                 return 1;
