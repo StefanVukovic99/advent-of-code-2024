@@ -49,20 +49,20 @@ pub fn part2(input: &str) -> usize {
             let pos1 = example.iter().position(|&x| x == rule.0);
             let pos2 = example.iter().position(|&x| x == rule.1);
             if pos1.is_some() && pos2.is_some() && pos1 > pos2 {
-                sorted_example.sort_by(|a, b| {
-                    if *a == rule.0 && *b == rule.1 {
-                        return std::cmp::Ordering::Less;
-                    } else if *a == rule.1 && *b == rule.0 {
-                        return std::cmp::Ordering::Greater;
-                    } else {
-                        return std::cmp::Ordering::Equal;
-                    }
-                });
                 had_to_sort = true;
             }
         }
+        sorted_example.sort_by(|a, b| {
+            for rule in rules.clone() {
+                if *a == rule.0 && *b == rule.1 {
+                    return std::cmp::Ordering::Greater;
+                } else if *a == rule.1 && *b == rule.0 {
+                    return std::cmp::Ordering::Less;
+                }
+            }
+            std::cmp::Ordering::Equal
+        });
         if had_to_sort {
-            dbg!(example);
             sum += sorted_example[sorted_example.len()/2];
         }
     }
