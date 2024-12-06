@@ -3,19 +3,24 @@ use aoc_runner_derive::{aoc};
 fn parse_input(input: &str) -> (Vec<(usize, usize)>, Vec<Vec<usize>>) {
     let mut rules = Vec::new();
     let mut examples = Vec::new();
-    
+    let mut saw_blank_line = false;
+
     for line in input.lines() {
-        if line.contains('|') {
+        if line.is_empty() {
+            saw_blank_line = true;
+            continue;
+        }
+        if saw_blank_line {
+            let parts: Vec<usize> = line.split(',')
+                .map(|x| x.parse().unwrap())
+                .collect();
+            examples.push(parts);
+        } else {
             let parts: Vec<&str> = line.split('|').collect();
             rules.push((
                 parts[0].parse().unwrap(), 
                 parts[1].parse().unwrap()
             ));
-        } else if line.contains(',') {
-            let parts: Vec<usize> = line.split(',')
-                .map(|x| x.parse().unwrap())
-                .collect();
-            examples.push(parts);
         }
     }
     
