@@ -22,6 +22,7 @@ let sum = examples
     })
     .map(fixBadExample)
     .reduce((acc, curr) => {
+        console.log(curr)
         return acc + curr[(curr.length - 1) / 2]
     }, 0)
 
