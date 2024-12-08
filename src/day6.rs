@@ -175,7 +175,7 @@ pub fn part2(input: &str) -> usize {
                 let mut number_matrix = get_number_matrix(&matrix);
                 // let converted_matrix = convert_number_matrix(&number_matrix);
                 // save_matrix_to_file(&converted_matrix.iter().map(|row| row.to_vec()).collect(), format!("output-06-2-blocked-{i}-{j}-0.txt").as_str()).unwrap();
-                print!("Trying to replace ({i}, {j})\n");
+                // print!("Trying to replace ({i}, {j})\n");
 
                 let mut guard_pos = og_guard_pos;
                 let mut direction_index = 0;
