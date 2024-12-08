@@ -1,5 +1,4 @@
 use aoc_runner_derive::{aoc};
-use core::num;
 use std::fs::File;
 use std::io::{Write, BufWriter};
 
@@ -7,7 +6,7 @@ type Matrix = [[char; MATRIX_SIZE as usize]; MATRIX_SIZE as usize];
 type NumberMatrix = [[usize; MATRIX_SIZE as usize]; MATRIX_SIZE as usize];
 type Pos = (isize, isize);
 
-const MATRIX_SIZE: isize = 10;
+const MATRIX_SIZE: isize = 130;
 const DIRECTIONS: [(isize, isize); 4] = [(-1, 0), (0, 1), (1, 0), (0, -1)];
 const ARROWS: [char; 4] = ['^', '>', 'v', '<'];
 const PRIMES: [usize; 4] = [2, 3, 5, 7];
@@ -99,11 +98,9 @@ fn get_number_matrix(matrix: &Matrix) -> NumberMatrix {
 }
 
 fn convert_number_matrix(matrix: &NumberMatrix) -> Matrix {
-    dbg!("Converting number matrix to arrow matrix");
     let mut new_matrix = [['.'; MATRIX_SIZE as usize]; MATRIX_SIZE as usize];
     for i in 0..MATRIX_SIZE {
         for j in 0..MATRIX_SIZE {
-            dbg!(i, j);
             new_matrix[i as usize][j as usize] = get_arrow_for_prime(matrix[i as usize][j as usize]);
         }
     }
@@ -141,7 +138,7 @@ pub fn part2(input: &str) -> usize {
     let mut guard_pos = og_guard_pos;
     let mut number_matrix = get_number_matrix(&matrix);
 
-    save_matrix_to_file(&matrix.iter().map(|row| row.to_vec()).collect(), "output-06-1-01.txt").unwrap();
+    // save_matrix_to_file(&matrix.iter().map(|row| row.to_vec()).collect(), "output-06-1-01.txt").unwrap();
 
     let mut i = 0;
     loop {
@@ -155,7 +152,6 @@ pub fn part2(input: &str) -> usize {
     
         let direction = DIRECTIONS[direction_index];
         let next_pos = (guard_pos.0 + direction.0, guard_pos.1 + direction.1);
-        dbg!(next_pos);
         if next_pos.0 < 0 || next_pos.0 >= MATRIX_SIZE || next_pos.1 < 0 || next_pos.1 >= MATRIX_SIZE {
             break;
         }
@@ -167,8 +163,9 @@ pub fn part2(input: &str) -> usize {
     }
 
     let converted_matrix = convert_number_matrix(&number_matrix);
-    dbg!("converted_matrix");
-    save_matrix_to_file(&converted_matrix.iter().map(|row| row.to_vec()).collect(), "output-06-1-02.txt").unwrap();
+    // save_matrix_to_file(&converted_matrix.iter().map(|row| row.to_vec()).collect(), "output-06-1-02.txt").unwrap();
+
+    let mut blockades: Vec<(usize, usize)> = Vec::new();
 
     for i in 0..MATRIX_SIZE {
         for j in 0..MATRIX_SIZE {
@@ -176,8 +173,15 @@ pub fn part2(input: &str) -> usize {
                 let mut matrix = og_matrix.clone();
                 matrix[i as usize][j as usize] = '#';
                 let mut number_matrix = get_number_matrix(&matrix);
+                // let converted_matrix = convert_number_matrix(&number_matrix);
+                // save_matrix_to_file(&converted_matrix.iter().map(|row| row.to_vec()).collect(), format!("output-06-2-blocked-{i}-{j}-0.txt").as_str()).unwrap();
+                print!("Trying to replace ({i}, {j})\n");
+
                 let mut guard_pos = og_guard_pos;
-                'steps: loop {            
+                let mut direction_index = 0;
+                let mut step = 0;
+                'steps: loop {   
+                    step += 1;         
                     matrix[guard_pos.0 as usize][guard_pos.1 as usize] = ARROWS[direction_index];
                     number_matrix[guard_pos.0 as usize][guard_pos.1 as usize] *= PRIMES[direction_index] as usize;
                     let prime_factors = get_prime_factors(number_matrix[guard_pos.0 as usize][guard_pos.1 as usize]);
@@ -185,23 +189,21 @@ pub fn part2(input: &str) -> usize {
                     if prime_factors.len() > 2 {
                         for prime in PRIMES {
                             if prime_factors.iter().filter(|&&p| p == prime).count() >= 3 {
-                                dbg!(prime);
-                                dbg!(prime_factors);
-                                dbg!(guard_pos);
-                                dbg!(number_matrix[guard_pos.0 as usize][guard_pos.1 as usize]);
-                                break;
+                                // dbg!("Found loop");
+                                blockades.push((i as usize,j as usize));
+                                // let converted_matrix = convert_number_matrix(&number_matrix);
+                                // save_matrix_to_file(&converted_matrix.iter().map(|row| row.to_vec()).collect(), format!("output-06-2-{i}-{j}.txt").as_str()).unwrap();
+                                break 'steps;
                             }
-                        }
-                        
-                        break;
-                    }
+                        }                        
+                   }
                     // let converted_matrix = convert_number_matrix(&number_matrix);
-                    // save_matrix_to_file(&converted_matrix.iter().map(|row| row.to_vec()).collect(), format!("output-06-1-{i}.txt").as_str()).unwrap();
+                    // save_matrix_to_file(&converted_matrix.iter().map(|row| row.to_vec()).collect(), format!("output-06-2-blocked-{i}-{j}-{step}.txt").as_str()).unwrap();
                 
                     let direction = DIRECTIONS[direction_index];
                     let next_pos = (guard_pos.0 + direction.0, guard_pos.1 + direction.1);
-                    dbg!(next_pos);
                     if next_pos.0 < 0 || next_pos.0 >= MATRIX_SIZE || next_pos.1 < 0 || next_pos.1 >= MATRIX_SIZE {
+                        // print!("breaking on step {step} because out of bounds\n");
                         break;
                     }
                     if matrix[next_pos.0 as usize][next_pos.1 as usize] == '#' {
@@ -213,5 +215,6 @@ pub fn part2(input: &str) -> usize {
             }
         }
     }
-    0
+    // dbg!(&blockades);
+    blockades.len() 
 }
