@@ -67,7 +67,9 @@ pub fn part1(input: &str) -> usize {
 
     println!("Final sane_blocks: {:?}", sane_blocks);
 
-    let sum = sane_blocks.iter().fold(0, |acc, x| acc + (x.0 - 1 ) * x.1 + x.0 * (x.1*x.1 - x.1) / 2);
+    let sum = sane_blocks.iter()
+        .filter(|x| x.0 != 0)
+        .fold(0, |acc, x| acc + (x.0 - 1 ) * x.1 + x.0 * (x.1*x.1 - x.1) / 2);
 
     sum
 }
